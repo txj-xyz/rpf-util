@@ -15,10 +15,19 @@ const getFiles = async function(dir) {
 }
 
 const GTAUtil = function(inputPath, outputPath){
-   exec(`GTAUtil.exe extractarchive --input ${inputPath} --output ${outputPath}`, function(err, data) {  
+  exec(`./tools/GTAUtil.exe`, function(err, data) {  
+    if(err) {
+      exec(`wget https://github.com/indilo53/gtautil/releases/download/2.2.7/gtautil-2.2.7.zip && mkdir tools && unzip -o ./tools/ gtautil-2.2.7.zip`, function(err, data) {  
         if(err) return err
         if(!err) return data.toString()
-    })
+      })
+    }
+    if(!err) return data.toString()
+  })
+  exec(`GTAUtil.exe extractarchive --input ${inputPath} --output ${outputPath}`, function(err, data) {  
+      if(err) return err
+      if(!err) return data.toString()
+  })
 }
 
 if(!process.argv) {
