@@ -16,16 +16,14 @@ const getFiles = async function(dir) {
 }
 
 const GTAUtil = function(inputPath, outputPath){
-  exec(`./tools/GTAUtil.exe`, function(err, data) {  
+
+  exec(`./tools/GTAUtil.exe`, ['extractarchive',`-i`,[ inputPath ],'-o',[outputPath]], function(err, data, pgmerr) {  
     if(err) {
-      return console.log(err)
+      return console.log(err ?? "", data, pgmerr)
+    } else {
+      console.log(err ?? "", data, pgmerr)
     }
-    if(!err) return console.log(data);
   })
-  // exec(`GTAUtil.exe extractarchive --input ${inputPath} --output ${outputPath}`, function(err, data) {  
-  //     if(err) return console.log(err);
-  //     if(!err) return data.toString()
-  // })
 }
 
 if(!process.argv) {
@@ -44,7 +42,6 @@ if(!process.argv[3]){
     }
   })
 } else { outputFolder = process.argv[3]; }
-console.log(outputFolder);
 // console.log(process.argv)
 getFiles(process.argv[2]).then(allFiles => {
     allFiles.forEach(file => {
