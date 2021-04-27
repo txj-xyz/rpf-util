@@ -4,6 +4,7 @@ const { resolve } = require('path');
 const fs = require('fs');
 const readdir = promisify(fs.readdir);
 const stat = promisify(fs.stat);
+let outputFolder = '';
 
 const getFiles = async function(dir) {
   const subdirs = await readdir(dir);
@@ -17,34 +18,40 @@ const getFiles = async function(dir) {
 const GTAUtil = function(inputPath, outputPath){
   exec(`./tools/GTAUtil.exe`, function(err, data) {  
     if(err) {
-      exec(`wget https://github.com/indilo53/gtautil/releases/download/2.2.7/gtautil-2.2.7.zip && mkdir tools && unzip -o ./tools/ gtautil-2.2.7.zip`, function(err, data) {  
-        if(err) return err
-        if(!err) return data.toString()
-      })
+      return console.log(err)
     }
     if(!err) return data.toString()
   })
   exec(`GTAUtil.exe extractarchive --input ${inputPath} --output ${outputPath}`, function(err, data) {  
-      if(err) return err
+      if(err) return console.log(err);
       if(!err) return data.toString()
   })
 }
 
 if(!process.argv) {
-  return new Error('node ./convert.js inputFolder/ outputFolder/')
+  return console.log('node ./convert.js inputFolder/ outputFolder/')
 }
-if(!process.argv[0]){
-  return new Error('node ./convert.js inputFolderDirectPath/ inputFolderDirectPath/\n\nIf you do not provide an output folder then the program will make a folder named `rpf-extract`')
+if(!process.argv[2]){
+  return console.log('node ./convert.js inputFolderDirectPath/ inputFolderDirectPath/\n\nIf you do not provide an output folder then the program will make a folder named `rpf-extract`')
 }
 
-getFiles(process.argv[0]).then(allFiles => {
-    allFiles.forEach(file => {
-        if(file.endsWith('.rpf'))
-        console.log(`Found RPF: ${file}`)
-        if(!process.argv[1]){
-          fs.mkdirSync('rpf-extract');
-        }
-        // file.match(/[^\\]*\.(\w+)$/g).toString().slice(0, -4)
-        GTAUtil(file.match(/[^\\]*\.(\w+)$/g).toString(), process.argv[1] || './rpf-extract/')
-    });
-})
+if(!process.argv[3]){
+  outputFolder = './rpf-extract'
+  fs.access(outputFolder, function(error) {
+    if (error) {
+      fs.mkdirSync('rpf-extract')
+      outputFolder = './rpf-extract';
+    }
+  })
+} else { outputFolder = process.argv[3]; }
+
+// console.log(process.argv)
+// getFiles(process.argv[2]).then(allFiles => {
+//     allFiles.forEach(file => {
+//         if(file.endsWith('.rpf'))
+//         console.log(`Found RPF: ${file}`)
+//         GTAUtil(file, outputFolder)
+//         // console.log(file);
+//         // file.match(/[^\\]*\.(\w+)$/g).toString().slice(0, -4)
+//     });
+// })
