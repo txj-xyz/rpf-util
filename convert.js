@@ -20,12 +20,12 @@ const GTAUtil = function(inputPath, outputPath){
     if(err) {
       return console.log(err)
     }
-    if(!err) return data.toString()
+    if(!err) return console.log(data);
   })
-  exec(`GTAUtil.exe extractarchive --input ${inputPath} --output ${outputPath}`, function(err, data) {  
-      if(err) return console.log(err);
-      if(!err) return data.toString()
-  })
+  // exec(`GTAUtil.exe extractarchive --input ${inputPath} --output ${outputPath}`, function(err, data) {  
+  //     if(err) return console.log(err);
+  //     if(!err) return data.toString()
+  // })
 }
 
 if(!process.argv) {
@@ -44,14 +44,14 @@ if(!process.argv[3]){
     }
   })
 } else { outputFolder = process.argv[3]; }
-
+console.log(outputFolder);
 // console.log(process.argv)
-// getFiles(process.argv[2]).then(allFiles => {
-//     allFiles.forEach(file => {
-//         if(file.endsWith('.rpf'))
-//         console.log(`Found RPF: ${file}`)
-//         GTAUtil(file, outputFolder)
-//         // console.log(file);
-//         // file.match(/[^\\]*\.(\w+)$/g).toString().slice(0, -4)
-//     });
-// })
+getFiles(process.argv[2]).then(allFiles => {
+    allFiles.forEach(file => {
+        if(file.endsWith('.rpf'))
+        // console.log(`Found RPF: ${file}`)
+        GTAUtil(file, outputFolder)
+        // console.log(file);
+        // file.match(/[^\\]*\.(\w+)$/g).toString().slice(0, -4)
+    });
+})
