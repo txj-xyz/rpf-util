@@ -5,6 +5,7 @@ const fs = require('fs');
 const readdir = promisify(fs.readdir);
 const stat = promisify(fs.stat);
 let outputFolder = '';
+let convertedFileCount = 0;
 
 const getFiles = async function(dir) {
   const subdirs = await readdir(dir);
@@ -16,8 +17,9 @@ const getFiles = async function(dir) {
 }
 
 const GTAUtil = function(inputPath, outputPath){
-
-  exec(`./tools/GTAUtil.exe`, ['extractarchive',`-i`,[ inputPath ],'-o',[outputPath]], function(err, data, pgmerr) {  
+  const output = `${outputPath}\\${inputPath.split('\\')[inputPath.split('\\').length - 2]}\\${inputPath.match(/[^\\]*\.(\w+)$/g).toString()}\\`
+  // console.log(`${outputPath}\\${inputPath.split('\\')[inputPath.split('\\').length - 2]}\\${inputPath.match(/[^\\]*\.(\w+)$/g).toString()}\\`)
+  exec(`./tools/GTAUtil.exe`, ['extractarchive',`-i`,[inputPath],'-o',[output] ], function(err, data, pgmerr) {  
     if(err) {
       return console.log(err ?? "", data, pgmerr)
     } else {
@@ -27,28 +29,29 @@ const GTAUtil = function(inputPath, outputPath){
 }
 
 if(!process.argv) {
-  return console.log('node ./convert.js inputFolder/ outputFolder/')
+  return console.log('node ./convert.js .\\inputFolderDirectPath\\ .\\inputFolderDirectPath\\')
 }
 if(!process.argv[2]){
-  return console.log('node ./convert.js inputFolderDirectPath/ inputFolderDirectPath/\n\nIf you do not provide an output folder then the program will make a folder named `rpf-extract`')
+  return console.log('node ./convert.js .\\inputFolderDirectPath\\ .\\inputFolderDirectPath\\\n\nIf you do not provide an output folder then the program will make a folder named `rpf-extract`')
 }
 
 if(!process.argv[3]){
-  outputFolder = './rpf-extract'
+  outputFolder = '.\\rpf-extract'
   fs.access(outputFolder, function(error) {
     if (error) {
       fs.mkdirSync('rpf-extract')
-      outputFolder = './rpf-extract';
+      outputFolder = '.\\rpf-extract';
     }
   })
 } else { outputFolder = process.argv[3]; }
 // console.log(process.argv)
 getFiles(process.argv[2]).then(allFiles => {
-    allFiles.forEach(file => {
-        if(file.endsWith('.rpf'))
-        // console.log(`Found RPF: ${file}`)
-        GTAUtil(file, outputFolder)
-        // console.log(file);
-        // file.match(/[^\\]*\.(\w+)$/g).toString().slice(0, -4)
-    });
+  convertedFileCount = 0
+  allFiles.forEach(file => {
+      if(file.endsWith('.rpf'))
+      GTAUtil(file, outputFolder)
+      console.log(`Done, Converted ${convertedFileCount} files.`);
+      // console.log(file.match(/[^\\]*\.(\w+)$/g).toString());
+      // file.match(/[^\\]*\.(\w+)$/g).toString().slice(0, -4)
+  });
 })
