@@ -29,10 +29,10 @@ const GTAUtil = function(inputPath, outputPath){
 }
 
 if(!process.argv) {
-  return console.log('node ./convert.js .\\inputFolderDirectPath\\ .\\inputFolderDirectPath\\')
+  return console.log('node .\\convert.js .\\inputFolderDirectPath\\ .\\outputFolderDirectPath\\\n\nIf you do not provide an output folder then the program will make a folder named `rpf-extract`')
 }
 if(!process.argv[2]){
-  return console.log('node ./convert.js .\\inputFolderDirectPath\\ .\\inputFolderDirectPath\\\n\nIf you do not provide an output folder then the program will make a folder named `rpf-extract`')
+  return console.log('node .\\convert.js .\\inputFolderDirectPath\\ .\\outputFolderDirectPath\\\n\nIf you do not provide an output folder then the program will make a folder named `rpf-extract`')
 }
 
 if(!process.argv[3]){
