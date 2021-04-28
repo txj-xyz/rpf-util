@@ -17,9 +17,9 @@ const getFiles = async function(dir) {
 }
 
 const GTAUtil = function(inputPath, outputPath){
-  const output = `${outputPath}\\${inputPath.split('\\')[inputPath.split('\\').length - 2]}\\${inputPath.match(/[^\\]*\.(\w+)$/g).toString()}\\`
+  const outputsubFolder = `${outputPath}\\${inputPath.split('\\')[inputPath.split('\\').length - 2]}\\${inputPath.match(/[^\\]*\.(\w+)$/g).toString()}\\`
   // console.log(`${outputPath}\\${inputPath.split('\\')[inputPath.split('\\').length - 2]}\\${inputPath.match(/[^\\]*\.(\w+)$/g).toString()}\\`)
-  exec(`./tools/GTAUtil.exe`, ['extractarchive',`-i`,[inputPath],'-o',[output] ], function(err, data, pgmerr) {  
+  exec(`./tools/GTAUtil.exe`, ['extractarchive',`-i`,[inputPath],'-o',[outputsubFolder] ], function(err, data, pgmerr) {  
     if(err) {
       return console.log(err ?? "", data, pgmerr)
     } else {
