@@ -14,6 +14,11 @@ node .\convert.js
 node .\convert.js .\inputFolderDirectPath\ [.\outputFolderDirectPath\]
 ```
 
+### Convert into a car resource
+```
+node .\convert.js [cars] [.\convert-folder\] [.\output_folder\]
+```
+
 
 If there is not an output folder specified the program will make a new folder named `rpf-convert`
 
